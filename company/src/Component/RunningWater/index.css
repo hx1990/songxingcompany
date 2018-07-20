@@ -1,0 +1,11 @@
+.express{
+    width: 85%;
+    overflow: hidden;
+}
+.DetailList {
+    width: 100%;
+    background: #f2f6ff;
+    height: 60px;
+    line-height: 60px;
+    font-size: 26px;
+}

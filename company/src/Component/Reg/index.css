@@ -1,0 +1,14 @@
+.reg{
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(52,155,154,0.6)
+}
+.reg h2 {
+  text-align: center;
+  width: 100%;
+  padding: 20px;
+  font-size: 34px;
+} 
+.reg .form {
+  
+}

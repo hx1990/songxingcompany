@@ -1,0 +1,46 @@
+.home .top{
+    width: 100%;
+    padding-left: 4%;
+    display: flex;
+    justify-content:space-between;
+    padding-right: 3%;
+    box-sizing: border-box;
+    margin-top:20px;
+}
+.home .top .phone i {
+   margin: 4px;
+}
+.home .logo1 {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    box-sizing: border-box;
+    padding-right: 10%;
+}
+.home .logo1 img {
+    width: 270px;
+}
+.home .banner{
+    width: 100%;
+}
+.home .banner img{
+    width: 100%
+}
+.home .footer{
+    margin-top:-5px;
+    width: 100%;
+    background: rgb(102,102,102);
+    height: 150px;
+    display: flex;
+    box-sizing: border-box;
+}
+.home .footer span {
+    margin: 10px;
+}
+.home .footer ul {
+    display: flex;
+    margin-top: 12px;
+}
+.home .footer ul li{
+    margin-right: 10px;
+}

@@ -1,0 +1,70 @@
+.nav {
+    width: 100%;
+    background:#fff;
+}
+.nav .linkList {
+    width: 15%;
+    height: 100%;
+    background: rgb(40,52,64)
+}
+.nav .linkList>li {
+    width: 100%;
+    overflow: hidden;
+}
+.nav .linkList li img  {
+   width: 20px;
+   height: 20px;
+   margin-left: 22px;
+   margin-right: 10px;
+}
+.nav .routerWrap .linkList a {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-size: 14px;
+    font-family: "宋体";
+    color:rgba(255, 255, 255, 1);
+    height: 50px;
+    line-height: 50px;
+    text-decoration: none
+}
+.nav .routerWrap .linkList a:hover{
+    text-decoration: none
+}
+.routerWrap {
+    width: 100%;
+    display:flex;
+}
+.activeRoute{
+    background:rgba(44,59,66);
+}
+.activeRoute span {
+    color: #2d67ff;
+}
+.ant-menu{
+    
+    color:rgba(255, 255, 255, 1);
+    background: rgb(40,52,64)
+}
+.subtitle{
+    padding-left: 60px;
+}
+.ant-menu-item-selected > a{
+    height: 40px;
+    line-height: 40px;
+}
+ .ant-menu-submenu > .ant-menu-submenu-title {
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    padding-left: 30px;
+}
+.ant-menu-inline .ant-menu-submenu-title{
+    font-size: 16px
+}
+.ant-menu-submenu > .ant-menu{
+    background: rgb(40,52,64)
+}
+.ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left {
+    border-right: 0px;
+}
