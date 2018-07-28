@@ -154,27 +154,27 @@ class StaffAudit extends Component {
     }
     clickPic(e){
       log(e.target.dataset.id)
-      if(e.target.dataset.id==0){
+      if(e.target.dataset.id===0){
         this.setState({
           pic:!this.state.pic
         }) 
-      }else if(e.target.dataset.id==1){
+      }else if(e.target.dataset.id===1){
         this.setState({
           pic1:!this.state.pic1
         }) 
-      }else if(e.target.dataset.id==2){
+      }else if(e.target.dataset.id===2){
         this.setState({
           pic2:!this.state.pic2
         }) 
-      }else if(e.target.dataset.id==3){
+      }else if(e.target.dataset.id===3){
         this.setState({
           pic3:!this.state.pic3
         }) 
-      }else if(e.target.dataset.id==4){
+      }else if(e.target.dataset.id===4){
         this.setState({
           pic4:!this.state.pic4
         }) 
-      }else if(e.target.dataset.id==5){
+      }else if(e.target.dataset.id===5){
         this.setState({
           pic5:!this.state.pic5
         }) 

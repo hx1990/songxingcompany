@@ -10,7 +10,7 @@ class Head extends Component{
     render(){
         return(<div className='head'>
         <div className='left'>
-         <img src={logo}/>
+         <img alt='' src={logo}/>
          <span>宋信智递企业管理平台</span>
         </div>
          <div className='right'>

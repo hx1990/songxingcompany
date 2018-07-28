@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
-import { Table,Select,Input} from 'antd'
+import { Table} from 'antd'
 import "./index.css"
 import Qs from 'qs'
 import axios from 'axios'
 const log=console.log.bind(console)
-const Option=Select.Option
-const Search=Input.Search
+
 
 
 
@@ -16,7 +15,7 @@ class RunningWater extends Component{
           data :[]
         }
         this.express=[
-            // { title: 'ID',  dataIndex: 'ID',  key: 'ID', align:'center' },
+            
             { title: '订单号',  dataIndex: 'orderNo', align:'center', key: 'orderNo', },
              
             { title: '支付时间',   dataIndex: 'payTime',align:'center',  key: 'payTime', },

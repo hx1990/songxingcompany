@@ -1,0 +1,32 @@
+.apply-status{
+    width:100%;
+    
+    display: flex;
+    height: auto;
+}
+.left-info{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    font-size: 26px;
+}
+
+
+.apply-status .rigth-function .item{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.item .img {
+    width: 300px;
+}
+.apply-status .rigth-function .item1{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+.apply-status .rigth-function .item1 input{
+    width: 60%;
+}

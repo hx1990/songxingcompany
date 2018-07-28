@@ -35,3 +35,7 @@
   .login-form .reg{
     margin-left: 10px;
   }
+  .time{
+    display: flex;
+    justify-content: flex-end;
+  }

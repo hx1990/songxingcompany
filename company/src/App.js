@@ -38,7 +38,7 @@ class App extends Component {
                   <Route path='/reg' component={Reg}/>
                   <Route path='/companyHost' component={CompanyHost}/>
             </div>
-         </Router> 
+     </Router> 
     );
   }
 }

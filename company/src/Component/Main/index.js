@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
     Router,
     Route,
-    NavLink
+    NavLink,
+    
   } from 'react-router-dom';
 
  import createHistory from 'history/createHashHistory'
@@ -15,8 +16,7 @@ import userUrl from "../../img/user.png"
 
 //引入组件
 
- import UserInfo from "../UserInfo"
- import Partner from '../Partner'
+ 
  import StaffList from '../StaffList'
  import StaffAudit from '../StaffAudit'
  import RunningWater from '../RunningWater'
@@ -25,18 +25,20 @@ import userUrl from "../../img/user.png"
  import ApplySettlement from '../ApplySettlement'
  import GetCode from '../GetCode'
  import Apply from '../Apply'
-
+ 
 import { Menu, Icon } from 'antd';
 const SubMenu = Menu.SubMenu;
 
  const history = createHistory()
-
+const log=console.log.bind(this)
 class Main extends Component{
-    constructor(){
-        super()
+    constructor(...agrs){
+        super(...agrs)
         this.state={
         }
+        log()
     }
+   
     render(){
         return(<div className="nav">
             <Router history={history}> 
@@ -49,19 +51,7 @@ class Main extends Component{
                             </NavLink>
                         </li>
 
-                        <li>
-                            <NavLink activeClassName="activeRoute" to="/companyHost/userInfo">
-                              <img alt='img' src={userUrl}/>
-                              <span>用户管理</span>
-                            </NavLink>
-                        </li>
-
-                        <li>
-                            <NavLink activeClassName="activeRoute" to="/companyHost/partner">
-                               <img alt='img' src={userUrl}/>
-                               <span >合伙人管理</span>
-                            </NavLink>
-                        </li>
+                        
  
                         <li>
                             <NavLink activeClassName="activeRoute" to="/companyHost/runningWater">
@@ -111,8 +101,7 @@ class Main extends Component{
                     </ul> 
                     <Route exact path="/companyHost/"  component={Apply}/> 
                     <Route path="/companyHost/apply"  component={Apply}/>
-                    <Route path="/companyHost/userInfo"  component={UserInfo}/>
-                    <Route path="/companyHost/partner" component={Partner}/>
+                    
                     <Route path="/companyHost/staffAudit" component={StaffAudit}/>
                     <Route path="/companyHost/staffList" component={StaffList}/>
                     <Route path='/companyHost/runningWater' component={RunningWater}/>
@@ -120,6 +109,7 @@ class Main extends Component{
                     <Route path='/companyHost/outstandingOrder' component={OutstandingOrder}/>
                     <Route path='/companyHost/applySettlement' component={ApplySettlement}/>
                     <Route path='/companyHost/getCode' component={GetCode}/>
+                    
                 </div>
             </Router>
         </div>)

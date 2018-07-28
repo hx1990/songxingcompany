@@ -1,324 +1,243 @@
 
 import React from 'react'
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete,Upload } from 'antd';
+import { Input, Select,Upload,Icon,Button} from 'antd';
 import './index.css'
+import axios from 'axios'
+import {citylist} from '../../Common'
 
-
-
-const FormItem = Form.Item;
 const Option = Select.Option;
-const AutoCompleteOption = AutoComplete.Option;
+const log=console.log.bind(console)
+const host =window.config.host
+log(citylist)
+let loginInfo=sessionStorage.getItem('loginInfo')&&JSON.parse(sessionStorage.getItem('loginInfo'))
 
-
-
-class RegistrationForm extends React.Component {
-  constructor(){
-    super()
-    let that=this
-    this.mode1={
-      action: '/upload/picture',
-      onChange({ file}) {
-        if(file.status==="done"){
-          that.setState({
-            show1:false,
-            idCardDownUrl:file.response.data
-          })
-        }
-      },
-    }
+class Reg extends React.Component {
+  constructor(...args){
+    super(...args)
+  }
+  mode1={
+    action: 'https://www.songxingde.cn:443/upload/picture',
+    onChange({ file}) {
+      if(file.status==="done"){
+        this.setState({
+          show1:false,
+          idCardDownUrl:file.response.data
+        })
+      }
+    },
   }
   state = {
     confirmDirty: false,
     autoCompleteResult: [],
+    provice:[],
+    cityList:[],
+    areaList:[],
+    cityIndex:0,
+    proviceIndex:0,
+    areaIndex:0,
+    payWay:1,
+    loginPhone:loginInfo&&loginInfo.loginPhone||'',
+    corpAddress:'',
+    corpName:'',
+    corpTel:'',
+    legalCardDown:'',
+    legalCardUp:'',
+    legalName:'',
+    legalPhone:'',
+    license:'',
+    detail:'',
   };
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
+  submit(){
+    let address=citylist[this.state.proviceIndex].name+citylist[this.state.proviceIndex].city[this.state.cityIndex].name+citylist[this.state.proviceIndex].city[this.state.cityIndex].area[this.state.areaIndex]
+         let values={
+          corpAddress:address+this.state.detail,
+          corpName:this.state.corpName,
+          corpTel:this.state.corpTel,
+          legalCardDown:'',
+          legalCardUp:'',
+          legalName:this.state.legalName,
+          legalPhone:this.state.legalPhone,
+          license:'',
+          payWay:this.state.payWay,
+          loginPhone:this.state.loginPhone,
+         }
+         log(values)
+        axios.post(host+'/admin/corp/post/info',values).then((res)=>{
+            if(res.data.code==200){
+              if(values.payWay==1){
+                values.status=3
+              }else if(values.payWay==2){
+                values.status=2
+              }
+              window.sessionStorage.setItem('loginInfo', JSON.stringify(
+                values
+              ))
+              window.location.reload()
+            }else{
+              alert(res.data.message)
+            }
+        })
   }
-
-  handleConfirmBlur = (e) => {
-    const value = e.target.value;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+  selecitCity(e){
+    let area=citylist[this.state.proviceIndex].city[e].area
+    let areaList=[]
+    area.forEach((key,index)=>{
+      areaList.push(<Option value={index}>{key}</Option>)
+    })
+    this.setState({
+      areaList,
+      cityIndex:e,
+      areaIndex:0
+    })
   }
-
-  compareToFirstPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && value !== form.getFieldValue('password')) {
-      callback('两次输入密码不一致，请重新输入!');
-    } else {
-      callback();
-    }
+  selectProvice(e){
+    let city=citylist[e].city
+    let cityList=[]
+    city.forEach((key,index)=>{
+      cityList.push(<Option value={index}>{key.name}</Option>)
+    })
+    
+    this.setState({
+      cityList,
+      cityIndex:0,
+      proviceIndex:e,
+      areaIndex:0,
+      areaList:[]
+    })
   }
-  
-  compareCode = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && value !== '12345') {
-      callback('输入验证码不正确，请重新输入!');
-    } else {
-      callback();
-    }
+  selectArea(e){
+   
+    this.setState({
+      areaIndex:e
+    })
   }
-
-  validateToNextPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(['confirm'], { force: true });
-    }
-    callback();
-  }
-
-  handleWebsiteChange = (value) => {
-    let autoCompleteResult;
-    if (!value) {
-      autoCompleteResult = [];
-    } else {
-      autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
-    }
-    this.setState({ autoCompleteResult });
+  componentWillMount(){
+    let provice=[]
+    citylist.forEach((key,index)=>{
+      provice.push(<Option value={index}>{key.name}</Option>)
+    })
+    this.setState({
+      provice
+    })
   }
   settlement(e){
-    
+    this.setState({
+      payWay:e
+    })
+  }
+  addcorpName(e){
+    log(e.target.value)
+    this.setState({
+      corpName:e.target.value
+    })
+  }
+  addcorpTel(e){
+    this.setState({
+      corpTel:e.target.value
+    })
+  }
+  addlegalName(e){
+    this.setState({
+      legalName:e.target.value
+    })
+  }
+  addlegalPhone(e){
+    this.setState({
+      legalPhone:e.target.value
+    })
+  }
+  addDetail(e){
+    this.setState({
+      detail:e.target.value
+    })
   }
   render() {
-    const { getFieldDecorator } = this.props.form;
-    
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 4 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-      },
-    };
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0,
-        },
-        sm: {
-          span: 16,
-          offset: 8,
-        },
-      },
-    };
-    
-
-    
-
     return (
-        <div className='reg'>
+        <div className="reg">
         <h2>企业结算申请</h2>
-      <Form onSubmit={this.handleSubmit} className='form'>
-      <FormItem {...formItemLayout}  label="选择结算方式" >
-      {getFieldDecorator('nickname6', {
-            rules: [{ required: true, message: '!', whitespace: true }],
-          })(
-            <Select defaultValue="日结" style={{ width: 120 }} onChange={this.settlement.bind(this)}>
-                 <Option value="1">日结</Option>
-                 <Option value="2">月结</Option>
-           </Select>
-          )}
-        </FormItem>
+        <div className="wrapmsg">
+               <div className="item">
+                   <div className="subitem">
+                      结算方式：
+                      <Select defaultValue="日结" style={{ width: 120 }} onChange={this.settlement.bind(this)}>
+                      <Option value="1">日结</Option>
+                      <Option value="2">月结</Option>
+                      </Select>
+                    </div> 
+               </div>
+               <div className="item">
+                     <div className="subitem">企业名称：<Input className="width140" onInput={this.addcorpName.bind(this)}  placeholder="输入企业名称" /></div> 
+               </div>
+               <div className="item">
+                   <div className="subitem">企业地址：<Select defaultValue="省" style={{ width: 120 }} onChange={this.selectProvice.bind(this)}>
+               {this.state.provice}
+            </Select>
+            <Select defaultValue="市" style={{ width: 120 }} onChange={this.selecitCity.bind(this)}>
+            {this.state.cityList}
+            </Select>
+            <Select defaultValue="区" style={{ width: 120 }} onChange={this.selectArea.bind(this)}>
+               {this.state.areaList}
+            </Select></div>         
+               </div>
+               
+               <div className="item">
+                   <div className="subitem">企业详细地址：<Input className="width140" onInput={this.addDetail.bind(this)}  placeholder="输入企业详细地址" /></div>         
+               </div>
 
-       <FormItem {...formItemLayout}  label="企业名称" >
-           {getFieldDecorator('nickname', {
-            rules: [{ required: true, message: '请输入您公司的名称!', whitespace: true }],
-          })(
-            <Input />
-          )}
-        </FormItem>
-        <FormItem {...formItemLayout}  label="企业地址">
-          {getFieldDecorator('nickname2', { rules: [{ required: true, message: '请输入公司地址!', whitespace: true }],  })(
-            <Input />
-          )}
-        </FormItem>
-        <FormItem {...formItemLayout}  label="联系人">
-          {getFieldDecorator('nickname5', { rules: [{ required: true, message: '请输入企业联系人姓名!', whitespace: true }],  })(
-            <Input />
-          )}
-        </FormItem>
-        <FormItem {...formItemLayout}  label="联系人电话">
-          {getFieldDecorator('nickname6', { rules: [{ required: true, message: '请输入企业联系人电话!', whitespace: true }],  })(
-            <Input />
-          )}
-        </FormItem>
-        <FormItem {...formItemLayout}  label="法人姓名">
-          {getFieldDecorator('nickname7', { rules: [{ required: true, message: '请输入企业法人姓名!', whitespace: true }],  })(
-            <Input />
-          )}
-        </FormItem>
-        <FormItem {...formItemLayout}  label="法人电话">
-          {getFieldDecorator('nickname8', { rules: [{ required: true, message: '请输入企业法人电话!', whitespace: true }],  })(
-            <Input />
-          )}
-        </FormItem>
+               <div className="item">
+                   <div className="subitem">企业电话：<Input className="width140" onInput={this.addcorpTel.bind(this)} placeholder="输入企业电话" /></div>         
+               </div>
 
-        <FormItem {...formItemLayout}  label="上传营业执照">
-          {getFieldDecorator('nickname9', { rules: [{ required: true, message: '请输入公司法人姓名!', whitespace: true }],  })(
-            <div>
-            <Upload {...this.mode} >
-            <Button > <Icon type="upload" />上传营业执照 </Button>
-            </Upload>
-            <img alt='' src={this.state.contractUrl}/>
-            </div>
-          )}
-        </FormItem>
-        <FormItem {...formItemLayout}  label="上传法人身份证正面">
-          {getFieldDecorator('nickname10', { rules: [{ required: true, message: '请输入公司法人姓名!', whitespace: true }],  })(
-            <div>
-            <Upload {...this.mode} >
-            <Button > <Icon type="upload" />上传法人身份证正面 </Button>
-            </Upload>
-            <img alt='' src={this.state.contractUrl}/>
-            </div>
-          )}
-        </FormItem>
-        <FormItem {...formItemLayout}  label="上传法人身份证反面">
-          {getFieldDecorator('nickname8', { rules: [{ required: true, message: '请输入公司法人姓名!', whitespace: true }],  })(
-            <div>
-            <Upload {...this.mode} >
-            <Button > <Icon type="upload" />上传法人身份证反面</Button>
-            </Upload>
-            <img alt='' src={this.state.contractUrl}/>
-            </div>
-          )}
-        </FormItem>
+               <div className="item">
+                   <div className="subitem">{this.state.payWay==1?'联系人':'法人'}姓名:<Input onInput={this.addlegalName.bind(this)} className="width140" placeholder="输入联系人" /></div>         
+               </div>
 
-        {/* <FormItem {...formItemLayout}  label="企业邮箱" >
-          {getFieldDecorator('email', {
-            rules: [{
-              type: 'email', message: '你输入的邮箱不合法',
-            }, {
-              required: true, message: 'Please input your E-mail!',
-            }],
-          })(
-            <Input />
-            
-          )}
-        </FormItem> */}
-        {/* <FormItem {...formItemLayout} label="注册手机号">
-          {getFieldDecorator('phone', {
-            rules: [{ required: true, message: '请输入注册手机号!' }],
-          })(<span>
-            <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
-            <Button>获取验证码</Button>
-            </span>
-          )}
-        </FormItem>
-        <FormItem {...formItemLayout}  label="验证码" >
-      {getFieldDecorator('nickname1', {
-            rules: [{ required: true, message: '请输入验证码!',  },{
-                validator: this.compareCode,
-              }],
-          })(
-            <Input />
-          )}
-        </FormItem> */}
-        {/* <FormItem {...formItemLayout}  label="注册密码" >
-          {getFieldDecorator('password', {
-            rules: [{
-              required: true, message: '请输入密码!',
-            }, {
-              validator: this.validateToNextPassword,
-            }],
-          })(
-            <Input type="password" />
-          )}
-        </FormItem>
+               <div className="item">
+                   <div className="subitem">{this.state.payWay==1?'联系人':'法人'}电话：<Input onInput={this.addlegalPhone.bind(this)} className="width140" placeholder="输入手机号" /></div>         
+               </div>
 
-        <FormItem  {...formItemLayout}  label="重新输入密码" >
-          {getFieldDecorator('confirm', {
-            rules: [{
-              required: true, message: '请重新输入密码!',
-            }, {
-              validator: this.compareToFirstPassword,
-            }],
-          })(
-            <Input type="password" onBlur={this.handleConfirmBlur} />
-          )}
-        </FormItem> */}
+                
 
-        
-        {/* <FormItem {...formItemLayout}  label="企业联系人">
-          {getFieldDecorator('nickname3', { rules: [{ required: true, message: '请输入企业联系人!', whitespace: true }],  })(
-            <Input />
-          )}
-        </FormItem>
-        
-        <FormItem {...formItemLayout} label="联系人电话">
-          {getFieldDecorator('phone1', {
-            rules: [{ required: true, message: '请输企业联系人电话!' }],
-          })(
-            <Input  style={{ width: '100%' }} />
-          )}
-        </FormItem>
+                <div className="item">
+                   <div className="subitem">
+                      企业营业执照：
+                      <div>
+                         <Upload {...this.mode} >
+                            <Button > <Icon type="upload" />上传营业执照 </Button>
+                         </Upload>
+                         <img alt='' src={this.state.contractUrl}/>
+                      </div>
+                     </div>         
+               </div>
 
-        <FormItem {...formItemLayout}  label="法人代表">
-          {getFieldDecorator('nickname4', { rules: [{ required: true, message: '请输入公司法人姓名!', whitespace: true }],  })(
-            <Input />
-          )}
-        </FormItem> */}
-        
-        
-        {/* <FormItem
-          {...formItemLayout}
-          label="Website"
-        >
-          {getFieldDecorator('website', {
-            rules: [{ required: true, message: 'Please input website!' }],
-          })(
-            <AutoComplete
-              dataSource={websiteOptions}
-              onChange={this.handleWebsiteChange}
-              placeholder="website"
-            >
-              <Input />
-            </AutoComplete>
-          )}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="Captcha"
-          extra="We must make sure that your are a human."
-        >
-          <Row gutter={8}>
-            <Col span={12}>
-              {getFieldDecorator('captcha', {
-                rules: [{ required: true, message: 'Please input the captcha you got!' }],
-              })(
-                <Input />
-              )}
-            </Col>
-            <Col span={12}>
-              <Button>Get captcha</Button>
-            </Col>
-          </Row>
-        </FormItem>
-        <FormItem {...tailFormItemLayout}>
-          {getFieldDecorator('agreement', {
-            valuePropName: 'checked',
-          })(
-            <Checkbox>I have read the <a href="">agreement</a></Checkbox>
-          )}
-        </FormItem> */}
-        <FormItem {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">注册</Button>
-        </FormItem>
-      </Form>
+               <div className="item" style={this.state.payWay==2?{display:'block'}:{display:'none'}}>
+                   <div className="subitem">
+                      法人身份证：
+                      <div>
+                         <Upload {...this.mode} >
+                            <Button > <Icon type="upload" />上传法人身份证正面 </Button>
+                         </Upload>
+                         <img alt='' src={this.state.contractUrl}/>
+                      </div>
+                     </div>         
+               </div>
+               
+               <div className="item" style={this.state.payWay==2?{display:'block'}:{display:'none'}}>
+                   <div className="subitem">
+                      法人身份证：
+                      <div>
+                         <Upload {...this.mode} >
+                            <Button > <Icon type="upload" />上传法人身份证反面 </Button>
+                         </Upload>
+                         <img alt='' src={this.state.contractUrl}/>
+                      </div>
+                     </div>         
+               </div>
+        </div>   
+        <Button onClick={this.submit.bind(this)}>提交申请</Button>
       </div>
     );
   }
 }
-
-const  Reg = Form.create()(RegistrationForm);
-
-
 export default Reg
